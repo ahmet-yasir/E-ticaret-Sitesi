@@ -14,12 +14,12 @@ function Loginpage() {
       <div className={'Logincard '+((isturn) ? "Logincardactive":"")}>
         <div className='Loginfront'>
           <div>
-            dasdsad
+            <h4>Giriş Yap</h4>
           </div>
         </div>
         <div className='Loginback'>
           <div>
-            aaaaaaaaaaaaaaaaaaa
+            Kayıt Ol
           </div>
         </div>
       </div>
