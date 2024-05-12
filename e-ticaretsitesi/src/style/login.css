@@ -6,9 +6,9 @@
     box-shadow: 0 0 10px 5px #ccc;
     border-radius: 0.5rem;
     width: 300px;
-    height: 300px;
+    height: 530px;
     transform-style: preserve-3d;
-    transition: transform 1s;
+    transition: transform 0.5s;
 }
 .Logincard > *{
     position: absolute;
@@ -35,5 +35,17 @@
     -webkit-backface-visibility: hidden;
 }
 .Logincardactive{
-    transform: rotateY(540deg);
+    transform: rotateY(180deg);
+}
+
+
+.tooltip-inner{
+    background-color: #ff2d2d!important
+}
+.tooltip-arrow::before{
+    border-right-color: #ff2d2d!important
+}
+
+.btn-close{
+    color: white;
 }
