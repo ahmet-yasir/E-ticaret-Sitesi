@@ -4,6 +4,7 @@ import {ErrorInput, Input} from '../components/input';
 import Toast from 'react-bootstrap/Toast';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import "../style/login.css"
+import api from "../utils/api"
 
 function Loginpage() {
   const [isturn,setturn] = useState(false);
@@ -18,17 +19,68 @@ function Loginpage() {
   const [registerPasswordControlErr,setRegisterPasswordControlErr] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("Giriş yapılamadı");
-  
-  // useEffect(()=>{
-  //   if(passwordControl !== registerPassword){
-  //     setShowToast(true);
-  //     setToastMessage("Parola Uyuşmuyor");
-  //   }
-  //   else{
-  //     setShowToast(false);
-  //     setToastMessage("Parola Uyuşmuyor");
-  //   }
-  // },[passwordControl, registerPassword]);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+      await api.post('/login', { 
+        email: loginEmail, 
+        password : loginPassword
+      }
+      ).then((response) => {
+          if (response.status === 200) {
+              // yönlendirme yapılacak
+          }
+      }).catch((error) => {
+        if(error.response && error.response.status === 401){
+          setShowToast(true);
+          setToastMessage("E-posta adresi veya şifre hatalı!");
+        }
+        else{
+          setShowToast(true);
+          setToastMessage("Bir hata oluştu!");
+        }
+      });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if(!isValidPassword(registerPassword)){
+      if(name === '' || surname === ''){
+        setShowToast(true);
+        setToastMessage("Ad ve soyad boş bırakılamaz.");
+      }
+      else{
+        await api.post('/register', {
+          name: name,
+          surname: surname,
+          email: registerEmail, 
+          password : registerPassword
+        }
+        ).then((response) => {
+            if (response.status === 201) {
+              //yönlendirme yapılacak
+              setShowToast(true);
+              setToastMessage("Kayıt Başarılı!");
+            }
+            console.log(response)
+        }).catch((error) => {
+          if (error.response && error.response.status === 400){
+            setShowToast(true);
+            setToastMessage("Bu e-posta adresi kullanılıyor.");
+          }
+          else{
+            setShowToast(true);
+            setToastMessage("Bir hata oluştu!");
+          }
+        });
+      } 
+    }
+    else{
+      setShowToast(true);
+      setToastMessage("Geçersiz şifre!");
+    }
+
+  };
 
   function isValidPassword(password){
     const hasLowerCase = /[a-z]/.test(registerPassword);
@@ -73,7 +125,7 @@ function Loginpage() {
           <div className='Loginfront'>
             <div className='p-3 pt-5'>
               <h4 className='fw-bold mt-5'>Giriş Yap</h4>
-                <form className='d-flex flex-column gap-2'>
+                <form className='d-flex flex-column gap-2' onSubmit={(e)=>handleLogin(e)}>
                 <Input
                     type="email"
                     label="E-posta"
@@ -95,7 +147,7 @@ function Loginpage() {
           <div className='Loginback'>
             <div className='p-3'>
               <h4 className='fw-bold'>Kayıt Ol</h4>
-              <form className='d-flex flex-column gap-1'>
+              <form className='d-flex flex-column gap-1' onSubmit={(e)=>handleRegister(e)}>
                   <Input
                     type="text"
                     label="Ad"
