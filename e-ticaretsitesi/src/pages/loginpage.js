@@ -6,46 +6,52 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import "../style/login.css"
 
 function Loginpage() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [isturn,setturn] = useState(false);
-  const [password,setPassword] = useState('');
-  const [passwordErr,setPasswordErr] = useState(false);
-  const [passwordControl,setPasswordControl] = useState('');
+  const [registerPassword,setRegisterPassword] = useState('');
+  const [loginPassword,setLoginPassword] = useState('');
+  const [registerEmail,setRegisterEmail] = useState('');
+  const [loginEmail,setLoginEmail] = useState('');
+  const [surname,setSurname] = useState('');
+  const [name,setName] = useState('');
+  const [registerPasswordErr,setRegisterPasswordErr] = useState(false);
+  const [registerPasswordControl,setRegisterPasswordControl] = useState('');
+  const [registerPasswordControlErr,setRegisterPasswordControlErr] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("Giriş yapılamadı");
   let active = 0;
-  useEffect(()=>{
-    if(passwordControl !== password){
-      setShowToast(true);
-      setToastMessage("Parola Uyuşmuyor");
-    }
-    else{
-      setShowToast(false);
-      setToastMessage("Parola Uyuşmuyor");
-    }
-  },[passwordControl, password]);
+  // useEffect(()=>{
+  //   if(passwordControl !== registerPassword){
+  //     setShowToast(true);
+  //     setToastMessage("Parola Uyuşmuyor");
+  //   }
+  //   else{
+  //     setShowToast(false);
+  //     setToastMessage("Parola Uyuşmuyor");
+  //   }
+  // },[passwordControl, registerPassword]);
 
   useEffect(()=>{
-    if(password.length > 0){
-      if(password.length < 8){
-        setPasswordErr(true);
+      if(registerPassword.length < 8 && registerPassword.length > 0){
+        setRegisterPasswordErr(true);
       }
       else{
-        setPasswordErr(false);
+        setRegisterPasswordErr(false);
       }
-    }
+  },[registerPassword]);
+
+  useEffect(()=>{
+    if(registerPasswordControl !== registerPassword && registerPasswordControl.length > 0) {
+      setRegisterPasswordControlErr(true);
+      }
     else{
-      setPasswordErr(false);
+      setRegisterPasswordControlErr(false);
     }
-      
-  },[password]);
+},[registerPasswordControl]);
 
   function turncard () {
     setturn(!isturn);
   }
-
-  
-
 
   return (
     <>
@@ -61,10 +67,18 @@ function Loginpage() {
             <div className='p-3 pt-5'>
               <h4 className='fw-bold mt-5'>Giriş Yap</h4>
                 <form className='d-flex flex-column gap-2'>
-                  <label className='w-100 text-start'>E-posta</label>
-                  <input className='form-control form-control-sm' type='email'/>
-                  <label className='w-100 text-start'>Şifre</label>
-                  <input className='form-control form-control-sm mb-3' type='password'/>
+                <Input
+                    type="email"
+                    label="E-posta"
+                    value={loginEmail}
+                    setValue={setLoginEmail}
+                  />
+                  <Input
+                    type="password"
+                    label="Şifre"
+                    value={loginPassword}
+                    setValue={setLoginPassword}
+                  />
                   <button className='btn btn-outline-primary w-100 shadow'>Giriş Yap</button>
                   <button className='btn btn-outline-danger w-100 shadow'>Google ile Giriş</button>
                 </form>
@@ -75,33 +89,39 @@ function Loginpage() {
             <div className='p-3'>
               <h4 className='fw-bold'>Kayıt Ol</h4>
               <form className='d-flex flex-column gap-1'>
-                  <label className='w-100 text-start'>Ad</label>
-                  <input className='form-control form-control-sm' type='text'/>
-                  <label className='w-100 text-start'>Soyad</label>
-                  <input className='form-control form-control-sm' type='text'/>
-                  <label className='w-100 text-start'>E-posta</label>
-                  <input className='form-control form-control-sm' type='email'/>
                   <Input
-                    type="password"
-                    label="Şifre"
-                    value={password}
-                    setValue={setPassword}
+                    type="text"
+                    label="Ad"
+                    value={name}
+                    setValue={setName}
+                  />
+                  <Input
+                    type="text"
+                    label="Soyad"
+                    value={surname}
+                    setValue={setSurname}
+                  />
+                  <Input
+                    type="email"
+                    label="E-posta"
+                    value={registerEmail}
+                    setValue={setRegisterEmail}
                   />
                   <ErrorInput
-                    isShow={passwordErr}
+                    isShow={registerPasswordErr}
                     type="password"
                     message="Şifreniz büyük, küçük harf ve rakamlardan oluşmalıdır. Minimum 8 karakter içermelidir."
                     label="Şifre"
-                    value={password}
-                    setValue={setPassword}
+                    value={registerPassword}
+                    setValue={setRegisterPassword}
                   />
                   <ErrorInput
-                    isShow={false}
+                    isShow={registerPasswordControlErr}
                     type="password"
                     message="Şifre eşleşmiyor."
-                    label="Şifre"
-                    value={passwordControl}
-                    setValue={setPasswordControl}
+                    label="Şifre tekrar"
+                    value={registerPasswordControl}
+                    setValue={setRegisterPasswordControl}
                   />
                   <button className='btn btn-outline-primary'>Kayıt Ol</button>
                   <button className='btn btn-outline-danger'>Google ile Kayıt Ol</button>
