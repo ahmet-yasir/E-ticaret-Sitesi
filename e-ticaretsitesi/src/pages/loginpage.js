@@ -6,7 +6,6 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import "../style/login.css"
 
 function Loginpage() {
-  const { id } = useParams();
   const [isturn,setturn] = useState(false);
   const [registerPassword,setRegisterPassword] = useState('');
   const [loginPassword,setLoginPassword] = useState('');
@@ -19,7 +18,7 @@ function Loginpage() {
   const [registerPasswordControlErr,setRegisterPasswordControlErr] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("Giriş yapılamadı");
-  let active = 0;
+  
   // useEffect(()=>{
   //   if(passwordControl !== registerPassword){
   //     setShowToast(true);
@@ -31,8 +30,16 @@ function Loginpage() {
   //   }
   // },[passwordControl, registerPassword]);
 
+  function isValidPassword(password){
+    const hasLowerCase = /[a-z]/.test(registerPassword);
+    const hasUpperCase = /[A-Z]/.test(registerPassword);
+    const hasNumber = /[0-9]/.test(registerPassword);
+    const isValidPassword = registerPassword.length >= 8 && hasLowerCase && hasUpperCase && hasNumber;
+    return (!isValidPassword);
+  }
+
   useEffect(()=>{
-      if(registerPassword.length < 8 && registerPassword.length > 0){
+      if(registerPassword.length > 0 && isValidPassword(registerPassword)){
         setRegisterPasswordErr(true);
       }
       else{
@@ -79,7 +86,7 @@ function Loginpage() {
                     value={loginPassword}
                     setValue={setLoginPassword}
                   />
-                  <button className='btn btn-outline-primary w-100 shadow'>Giriş Yap</button>
+                  <button className='btn btn-outline-primary w-100 shadow mt-2'>Giriş Yap</button>
                   <button className='btn btn-outline-danger w-100 shadow'>Google ile Giriş</button>
                 </form>
                 <p className='mt-3'>Kayıt olmak için <Link onClick={turncard} className='text-decoration-none'>tıklayınız</Link></p>
@@ -123,8 +130,8 @@ function Loginpage() {
                     value={registerPasswordControl}
                     setValue={setRegisterPasswordControl}
                   />
-                  <button className='btn btn-outline-primary'>Kayıt Ol</button>
-                  <button className='btn btn-outline-danger'>Google ile Kayıt Ol</button>
+                  <button className='btn btn-outline-primary shadow mt-3'>Kayıt Ol</button>
+                  <button className='btn btn-outline-danger shadow mt-1'>Google ile Kayıt Ol</button>
                 </form>
                 <p className='mt-3'>Giriş yapmak için <Link onClick={turncard} className='text-decoration-none'>tıklayınız</Link></p>
             </div>
