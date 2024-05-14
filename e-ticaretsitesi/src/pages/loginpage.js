@@ -5,6 +5,7 @@ import Toast from 'react-bootstrap/Toast';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import "../style/login.css"
 import api from "../utils/api"
+import { GoogleOAuth } from '../components/oauth';
 
 function Loginpage() {
   const [isturn,setturn] = useState(false);
@@ -111,7 +112,54 @@ function Loginpage() {
   function turncard () {
     setturn(!isturn);
   }
-
+  async function handleOAuthLogin(data){
+    console.log(data)
+    await api.post('/login-google', { 
+      email: data.email, 
+      token : data.sub
+    }
+    ).then((response) => {
+        if (response.status === 200) {
+          console.log("success")
+            // yönlendirme yapılacak
+        }
+    }).catch((error) => {
+      if(error.response && error.response.status === 401){
+        setShowToast(true);
+        setToastMessage("E-posta adresi kayıtlı değil.");
+      }
+      else{
+        setShowToast(true);
+        setToastMessage("Bir hata oluştu!");
+      }
+    });
+  }
+  async function  handleOAuthRegister(data){
+      console.log(data)
+      await api.post('/register-google', {
+        name: data.given_name,
+        surname: data.family_name,
+        email: data.email, 
+        token : data.sub
+      }
+      ).then((response) => {
+          if (response.status === 201) {
+            //yönlendirme yapılacak
+            setShowToast(true);
+            setToastMessage("Kayıt Başarılı!");
+          }
+          console.log(response)
+      }).catch((error) => {
+        if (error.response && error.response.status === 400){
+          setShowToast(true);
+          setToastMessage("Bu e-posta adresi kullanılıyor.");
+        }
+        else{
+          setShowToast(true);
+          setToastMessage("Bir hata oluştu!");
+        }
+      });
+  }
   return (
     <>
       <div className='d-flex flex-column justify-content-center align-items-center pb-0' style={{minHeight:'100vh', width:'100%', background:'#cff'}}>
@@ -139,8 +187,8 @@ function Loginpage() {
                     setValue={setLoginPassword}
                   />
                   <button className='btn btn-outline-primary w-100 shadow mt-2'>Giriş Yap</button>
-                  <button className='btn btn-outline-danger w-100 shadow'>Google ile Giriş</button>
                 </form>
+                <GoogleOAuth handleOAuth={handleOAuthLogin} label="Google ile giriş yap"/>
                 <p className='mt-3'>Kayıt olmak için <Link onClick={turncard} className='text-decoration-none'>tıklayınız</Link></p>
             </div>
           </div>
@@ -183,8 +231,8 @@ function Loginpage() {
                     setValue={setRegisterPasswordControl}
                   />
                   <button className='btn btn-outline-primary shadow mt-3'>Kayıt Ol</button>
-                  <button className='btn btn-outline-danger shadow mt-1'>Google ile Kayıt Ol</button>
                 </form>
+                  <GoogleOAuth handleOAuth={handleOAuthRegister} label="Google ile kayıt ol"/>
                 <p className='mt-3'>Giriş yapmak için <Link onClick={turncard} className='text-decoration-none'>tıklayınız</Link></p>
             </div>
           </div>
