@@ -14,13 +14,14 @@ export const GoogleOAuth = ({handleOAuth , label})=>{
                 }
                 );
                 handleOAuth(res.data);
-            } catch(err){
+            } 
+            catch(err){
                 handleOAuth(err);
             }
         }
     });
     return(
         <button className='btn btn-outline-danger shadow mt-1 w-100' onClick={googleOAuth}>{label}</button>
-    );
+    );
 }
 
