@@ -47,9 +47,9 @@ function Loginpage() {
 	const handleRegister = async (e) => {
 		e.preventDefault();
 		if(!isValidPassword(registerPassword)){
-			if(name === '' || surname === ''){
+			if(name === '' || surname === '' || registerEmail === ''){
 				setShowToast(true);
-				setToastMessage("Ad ve soyad boş bırakılamaz.");
+				setToastMessage("Ad, soyad ve e-posta boş bırakılamaz.");
 			}
 			else{
 				await api.post('/register', {
